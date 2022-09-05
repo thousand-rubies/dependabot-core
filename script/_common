@@ -20,7 +20,7 @@ function docker_exec() {
   appdir=$(cd $(dirname "$0")/../updater && pwd)
   docker run --env "DEPENDABOT_TEST_ACCESS_TOKEN=$DEPENDABOT_TEST_ACCESS_TOKEN" \
   --rm \
-  -v "$(pwd)/.:/home/dependabot/dependabot-updater:delegated" \
+  -v "$(pwd)/.:/home/dependabot/dependabot-core/updater:delegated" \
   -ti "$LOCAL_IMAGE" "$@"
 }
 
@@ -36,7 +36,7 @@ function docker_bundle_exec() {
   docker run --env "DEPENDABOT_TEST_ACCESS_TOKEN=$DEPENDABOT_TEST_ACCESS_TOKEN" \
   $VCR_ARGS \
   --rm \
-  -v "$(pwd)/updater/spec/fixtures/vcr_cassettes:/home/dependabot/dependabot-updater/spec/fixtures/vcr_cassettes" \
+  -v "$(pwd)/updater/spec/fixtures/vcr_cassettes:/home/dependabot/dependabot-core/updater/spec/fixtures/vcr_cassettes" \
   "$LOCAL_IMAGE" bundle exec "$@"
 }
 
