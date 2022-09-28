@@ -103,6 +103,7 @@ module Dependabot
           dependency: dependency,
           target_version: lowest_security_fix_version
         )
+        return conflicts unless vulnerability_audit_performed?
 
         vulnerable = [vulnerability_audit].select do |hash|
           !hash["fix_available"] && hash["explanation"]
@@ -112,6 +113,10 @@ module Dependabot
       end
 
       private
+
+      def vulnerability_audit_performed?
+        defined?(@vulnerability_audit)
+      end
 
       def vulnerability_audit
         @vulnerability_audit ||=
