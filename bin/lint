@@ -9,4 +9,6 @@ shellcheck \
   ./*/helpers/*/build \
   ./*/helpers/build \
   ./*/script/* \
+  ./script/* \
+  ./updater/bin/run \
   "$@"
