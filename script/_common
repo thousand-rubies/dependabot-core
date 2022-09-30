@@ -6,7 +6,7 @@ function docker_build() {
 
   extract_version
 
-  docker build $DOCKER_BUILD_ARGS -f Dockerfile.updater -t "$LOCAL_IMAGE" --build-arg OMNIBUS_VERSION=$OMNIBUS_VERSION .
+  docker build "$DOCKER_BUILD_ARGS" -f Dockerfile.updater -t "$LOCAL_IMAGE" --build-arg OMNIBUS_VERSION="$OMNIBUS_VERSION" .
 
   # Verify max layers; an AUFS limit that was _crucial_ on Heroku (but not now)
   IMAGE_LAYERS=$(docker history -q "$LOCAL_IMAGE" | wc -l | sed -e 's/ //g')
@@ -34,7 +34,7 @@ function docker_bundle_exec() {
 
   appdir=$(cd $(dirname "$0")/../updater && pwd)
   docker run --env "DEPENDABOT_TEST_ACCESS_TOKEN=$DEPENDABOT_TEST_ACCESS_TOKEN" \
-  $VCR_ARGS \
+  "$VCR_ARGS" \
   --rm \
   -v "$(pwd)/updater/spec/fixtures/vcr_cassettes:/home/dependabot/dependabot-updater/spec/fixtures/vcr_cassettes" \
   "$LOCAL_IMAGE" bundle exec "$@"
