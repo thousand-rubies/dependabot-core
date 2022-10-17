@@ -16,7 +16,8 @@ RSpec.describe Dependabot::Bundler::UpdateChecker do
       dependency_files: dependency_files,
       credentials: credentials,
       ignored_versions: ignored_versions,
-      security_advisories: security_advisories
+      security_advisories: security_advisories,
+      requirements_update_strategy: requirements_update_strategy
     )
   end
   let(:credentials) do
@@ -33,6 +34,7 @@ RSpec.describe Dependabot::Bundler::UpdateChecker do
   let(:directory) { "/" }
   let(:ignored_versions) { [] }
   let(:security_advisories) { [] }
+  let(:requirements_update_strategy) { nil }
 
   let(:dependency) do
     Dependabot::Dependency.new(
@@ -1895,6 +1897,12 @@ RSpec.describe Dependabot::Bundler::UpdateChecker do
       end
 
       it { is_expected.to eq(true) }
+
+      context "and with the lockfile-only requirements update strategy set" do
+        let(:requirements_update_strategy) { :lockfile_only }
+
+        it { is_expected.to eq(true) }
+      end
     end
 
     context "with a sub-dependency" do
@@ -1920,6 +1928,12 @@ RSpec.describe Dependabot::Bundler::UpdateChecker do
         let(:req) { "> 1.0.0, < 1.5.0" }
 
         it { is_expected.to eq(true) }
+      end
+
+      context "but with the lockfile-only requirements update strategy set" do
+        let(:requirements_update_strategy) { :lockfile_only }
+
+        it { is_expected.to eq(false) }
       end
     end
 
