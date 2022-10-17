@@ -46,11 +46,11 @@ module Dependabot
       end
 
       def requirement_class
-        Requirement
+        dependency.requirement_class
       end
 
       def version_class
-        Version
+        dependency.version_class
       end
 
       private

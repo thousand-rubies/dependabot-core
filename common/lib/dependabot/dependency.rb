@@ -134,6 +134,14 @@ module Dependabot
       self.==(other)
     end
 
+    def requirement_class
+      Utils.requirement_class_for_package_manager(package_manager)
+    end
+
+    def version_class
+      Utils.version_class_for_package_manager(package_manager)
+    end
+
     private
 
     def check_values

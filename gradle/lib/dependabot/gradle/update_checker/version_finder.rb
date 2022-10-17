@@ -310,7 +310,7 @@ module Dependabot
         end
 
         def version_class
-          Gradle::Version
+          dependency.version_class
         end
 
         def auth_headers_finder

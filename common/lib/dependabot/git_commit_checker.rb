@@ -412,13 +412,13 @@ module Dependabot
     def version_class
       return @version_class if @version_class
 
-      Utils.version_class_for_package_manager(dependency.package_manager)
+      dependency.version_class
     end
 
     def requirement_class
       return @requirement_class if @requirement_class
 
-      Utils.requirement_class_for_package_manager(dependency.package_manager)
+      dependency.requirement_class
     end
 
     def local_repo_git_metadata_fetcher

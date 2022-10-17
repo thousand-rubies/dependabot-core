@@ -152,7 +152,7 @@ module Dependabot
         end
 
         def version_class
-          Hex::Version
+          dependency.version_class
         end
 
         def mix_env

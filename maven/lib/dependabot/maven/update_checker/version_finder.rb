@@ -271,7 +271,7 @@ module Dependabot
         end
 
         def version_class
-          Maven::Version
+          dependency.version_class
         end
 
         def central_repo_urls
