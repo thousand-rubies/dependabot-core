@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require "pathname"
+require "active_support"
+require "active_support/core_ext/array/conversions"
 require "dependabot/clients/github_with_retries"
 require "dependabot/clients/gitlab_with_retries"
 require "dependabot/metadata_finders"
@@ -71,28 +73,48 @@ module Dependabot
       def library_pr_name
         pr_name = "update "
         pr_name = pr_name.capitalize if pr_name_prefixer.capitalize_first_word?
+        dependencies_by_name = dependencies.group_by(&:name)
 
         pr_name +
-          if dependencies.count == 1
-            "#{dependencies.first.display_name} requirement " \
-              "#{from_version_msg(old_library_requirement(dependencies.first))}" \
-              "to #{new_library_requirement(dependencies.first)}"
+          if dependencies_by_name.count == 1
+            name = dependencies_by_name.keys.first
+            version_changes = dependencies.map do |dep|
+              from = from_version_msg(old_library_requirement(dep))
+              to = new_library_requirement(dep)
+              "#{from} to #{to}"
+            end.uniq
+
+            "#{dependencies.first.display_name} requirement" +
+              if version_changes.size <= 3
+                " #{version_changes.to_sentence(last_word_connector: ' and ')}"
+              else
+                " #{version_changes[0..2].join(', ')}, ..."
+              end
           else
-            names = dependencies.map(&:name)
-            "requirements for #{names[0..-2].join(', ')} and #{names[-1]}"
+            names = grouped_dependencies.keys
+            "requirements for #{names.to_sentence(last_word_connector: ' and ')}"
           end
       end
 
       def application_pr_name
         pr_name = "bump "
         pr_name = pr_name.capitalize if pr_name_prefixer.capitalize_first_word?
+        dependencies_by_name = dependencies.group_by(&:name)
 
         pr_name +
-          if dependencies.count == 1
-            dependency = dependencies.first
-            "#{dependency.display_name} " \
-              "#{from_version_msg(previous_version(dependency))}" \
-              "to #{new_version(dependency)}"
+          if dependencies_by_name.count == 1
+            version_changes = dependencies.map do |dep|
+              from = from_version_msg(previous_version(dep))
+              to = new_version(dep)
+              "#{from} to #{to}"
+            end.uniq
+
+            dependencies.first.display_name +
+              if version_changes.count <= 3
+                " #{version_changes.to_sentence(last_word_connector: ' and ')}"
+              else
+                " #{version_changes[0..2].join(', ')}, ..."
+              end
           elsif updating_a_property?
             dependency = dependencies.first
             "#{property_name} " \
@@ -104,8 +126,8 @@ module Dependabot
               "#{from_version_msg(previous_version(dependency))}" \
               "to #{new_version(dependency)}"
           else
-            names = dependencies.map(&:name)
-            "#{names[0..-2].join(', ')} and #{names[-1]}"
+            names = dependencies_by_name.keys
+            names.to_sentence(last_word_connector: " and ")
           end
       end
 
