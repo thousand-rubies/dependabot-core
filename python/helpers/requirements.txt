@@ -9,3 +9,7 @@ wheel==0.37.1
 
 # Some dependencies will only install if Cython is present
 Cython==0.29.32
+certifi>=2023.7.22 # not directly required, pinned by Snyk to avoid a vulnerability
+cryptography>=42.0.2 # not directly required, pinned by Snyk to avoid a vulnerability
+poetry-core>=1.1.0a7 # not directly required, pinned by Snyk to avoid a vulnerability
+requests>=2.31.0 # not directly required, pinned by Snyk to avoid a vulnerability
