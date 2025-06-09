@@ -32,9 +32,9 @@ group :test do
   gem "rubocop", "~> 1.36.0"
   gem "rubocop-performance", "~> 1.15.0"
   gem "vcr", "~> 6.1"
-  gem "webmock", "~> 3.18"
+  gem "webmock", "~> 3.19", ">= 3.19.0"
 end
 
 group :development do
-  gem "licensed", "~> 3.7", require: false
+  gem "licensed", "~> 3.7", ">= 3.7.5", require: false
 end
